@@ -111,10 +111,12 @@ To compile and run the Java demonstration applications:
     ```
 
 
+## Author
+
+Durjoy Barua (https://github.com/iamdurjoybarua)
+
 ## License
 
 This project is open-source and available under the MIT License (https://opensource.org/licenses/MIT).
 
-## Author
 
-Durjoy Barua (https://github.com/iamdurjoybarua)
