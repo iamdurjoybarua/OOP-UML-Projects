@@ -1,4 +1,4 @@
-# [YOUR_REPO_NAME]
+# OOP-UML-Projects
 
 A collection of object-oriented programming (OOP) system design examples, demonstrating various UML concepts including **Class Diagrams**, **Use Case Diagrams** (where applicable), **Classes**, **Associations**, **Generalization (Inheritance)**, **Attributes**, **Operations (Methods)**, and **Enumerations**. This repository features accompanying Java implementations for several mini-projects, showcasing how theoretical designs translate into functional code.
 
