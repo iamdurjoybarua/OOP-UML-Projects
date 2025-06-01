@@ -1,452 +1,369 @@
-import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Objects;
-import java.util.Arrays;
+import java.util.UUID; // For generating unique IDs
 
-// =============================================================================
-// Enums (for Gender)
-// =============================================================================
-enum Gender {
-    MALE, FEMALE, OTHER
-}
+// Staff.java (Base class for Doctor and Nurse)
+class Staff {
+    protected String id;
+    protected String name;
+    protected String position;
+    protected String contactNumber;
+    protected String department;
+    protected String workShift;
 
-// =============================================================================
-// Base Classes
-// =============================================================================
-
-class Person {
-    private String title;
-    private String givenName;
-    private String middleName;
-    private String familyName;
-    private LocalDate birthDate;
-    private Gender gender;
-    private String homeAddress;
-    private String phone;
-
-    public Person(String title, String givenName, String middleName, String familyName,
-                  LocalDate birthDate, Gender gender, String homeAddress, String phone) {
-        this.title = title;
-        this.givenName = givenName;
-        this.middleName = middleName;
-        this.familyName = familyName;
-        this.birthDate = birthDate;
-        this.gender = gender;
-        this.homeAddress = homeAddress;
-        this.phone = phone;
-        System.out.println("Person " + getFullName() + " created.");
-    }
-
-    // Getters
-    public String getTitle() { return title; }
-    public String getGivenName() { return givenName; }
-    public String getMiddleName() { return middleName; }
-    public String getFamilyName() { return familyName; }
-    public LocalDate getBirthDate() { return birthDate; } // Public getter for birthDate
-    public Gender getGender() { return gender; }
-    public String getHomeAddress() { return homeAddress; }
-    public String getPhone() { return phone; }
-
-    // Derived attribute: /name: FullName
-    public String getFullName() {
-        StringBuilder fullName = new StringBuilder();
-        if (givenName != null && !givenName.isEmpty()) fullName.append(givenName);
-        if (middleName != null && !middleName.isEmpty()) {
-            if (fullName.length() > 0) fullName.append(" ");
-            fullName.append(middleName);
-        }
-        if (familyName != null && !familyName.isEmpty()) {
-            if (fullName.length() > 0) fullName.append(" ");
-            fullName.append(familyName);
-        }
-        return fullName.toString();
-    }
-
-    // Other potential methods for a Person (e.g., updateContactInfo)
-}
-
-class Hospital {
-    private String name; // {id}
-    private String address; // /address - derived from name or separate
-    private String phone; // Phone
-
-    // Composition: Hospital has Department (1-to-1 as per diagram, though unusual for real hospitals)
-    private Department department;
-
-    // Association: Hospital employs Persons (a broader list, including staff and possibly patients if they are considered "members" of the hospital system)
-    private List<Person> employedPersons;
-
-    public Hospital(String name, String address, String phone) {
-        this.name = name;
-        this.address = address;
-        this.phone = phone;
-        this.employedPersons = new ArrayList<>();
-        System.out.println("Hospital '" + name + "' created.");
-    }
-
-    // Getters
-    public String getName() { return name; }
-    public String getAddress() { return address; }
-    public String getPhone() { return phone; }
-    public Department getDepartment() { return department; }
-    public List<Person> getEmployedPersons() { return new ArrayList<>(employedPersons); }
-
-    // Setters for composition
-    public void setDepartment(Department department) {
-        if (this.department != null) {
-            System.out.println("Warning: Hospital already has a department. Replacing.");
-        }
-        this.department = department;
-        System.out.println("Department linked to Hospital " + name);
-    }
-
-    // Business Methods
-    public void addEmployee(Person person) {
-        if (!employedPersons.contains(person)) {
-            employedPersons.add(person);
-            System.out.println(person.getFullName() + " added as an employee/member to " + name);
-        }
-    }
-
-    public void removeEmployee(Person person) {
-        if (employedPersons.remove(person)) {
-            System.out.println(person.getFullName() + " removed from " + name + " employees/members.");
-        }
-    }
-
-    public void displayHospitalInfo() {
-        System.out.println("\n--- Hospital Info: " + name + " ---");
-        System.out.println("Address: " + address);
-        System.out.println("Phone: " + phone);
-        System.out.println("Number of employees/members: " + employedPersons.size());
-        if (department != null) {
-            System.out.println("Main Department: " + department.getName());
-        }
-        System.out.println("------------------------------");
-    }
-}
-
-class Department {
-    private String name; // Assuming a name for the department
-
-    public Department(String name) {
-        this.name = name;
-        System.out.println("Department '" + name + "' created.");
-    }
-
-    public String getName() { return name; }
-}
-
-// =============================================================================
-// Subclasses of Person
-// =============================================================================
-
-class Patient extends Person {
-    private String id; // {id}
-    private LocalDate acceptedDate; // accepted
-    private String sicknessHistory; // sickness: History
-    private List<String> prescriptions; // prescription[*]
-    private List<String> allergies;      // allergies[*]
-    private List<String> specialRequests; // specialRwqts[*] - corrected in Java code
-
-    public Patient(String title, String givenName, String middleName, String familyName,
-                   LocalDate birthDate, Gender gender, String homeAddress, String phone,
-                   String id, LocalDate acceptedDate, String sicknessHistory,
-                   List<String> prescriptions, List<String> allergies, List<String> specialRequests) {
-        super(title, givenName, middleName, familyName, birthDate, gender, homeAddress, phone);
+    public Staff(String id, String name, String position, String contactNumber, String department, String workShift) {
         this.id = id;
-        this.acceptedDate = acceptedDate;
-        this.sicknessHistory = sicknessHistory;
-        this.prescriptions = prescriptions != null ? new ArrayList<>(prescriptions) : new ArrayList<>();
-        this.allergies = allergies != null ? new ArrayList<>(allergies) : new ArrayList<>();
-        this.specialRequests = specialRequests != null ? new ArrayList<>(specialRequests) : new ArrayList<>();
-        System.out.println("Patient " + getFullName() + " (ID: " + id + ") registered.");
+        this.name = name;
+        this.position = position;
+        this.contactNumber = contactNumber;
+        this.department = department;
+        this.workShift = workShift;
     }
 
     // Getters
     public String getId() { return id; }
-    // CORRECTED LINE: Use getBirthDate() from superclass
-    public int getAge() {
-        return LocalDate.now().getYear() - getBirthDate().getYear();
-    }
-    public LocalDate getAcceptedDate() { return acceptedDate; }
-    public String getSicknessHistory() { return sicknessHistory; }
-    public List<String> getPrescriptions() { return new ArrayList<>(prescriptions); }
-    public List<String> getAllergies() { return new ArrayList<>(allergies); }
-    public List<String> getSpecialRequests() { return new ArrayList<>(specialRequests); }
+    public String getName() { return name; }
+    public String getPosition() { return position; }
+    public String getContactNumber() { return contactNumber; }
+    public String getDepartment() { return department; }
+    public String getWorkShift() { return workShift; }
 
-    public void displayPatientInfo() {
-        System.out.println("\n--- Patient Info (ID: " + id + ") ---");
-        System.out.println("Name: " + getFullName());
-        System.out.println("Gender: " + getGender());
-        System.out.println("Age: " + getAge());
-        System.out.println("Accepted Date: " + acceptedDate);
-        System.out.println("Sickness: " + sicknessHistory);
-        System.out.println("Allergies: " + (allergies.isEmpty() ? "None" : String.join(", ", allergies)));
-        System.out.println("Special Requests: " + (specialRequests.isEmpty() ? "None" : String.join(", ", specialRequests)));
-        System.out.println("Prescriptions: " + (prescriptions.isEmpty() ? "None" : String.join(", ", prescriptions)));
-        System.out.println("------------------------------");
+    // Operations
+    public void scheduleAppointment(Appointment appointment) {
+        System.out.println(this.name + " (" + this.position + ") is scheduling appointment " + appointment.getId() + " for " + appointment.getPatient().getName());
+        // In a real system, this would involve checking availability and updating schedules.
+    }
+
+    public void updatePatientRecord(Patient patient, MedicalRecord record, String updateDetails) {
+        System.out.println(this.name + " (" + this.position + ") updating medical record for " + patient.getName() + ": " + updateDetails);
+        record.addRecord(updateDetails); // Adding a simple record entry
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Staff staff = (Staff) o;
+        return Objects.equals(id, staff.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 }
 
-class Staff extends Person {
-    private LocalDate joinedDate;
-    private List<String> education;
-    private List<String> certifications; // Corrected from 'certifiction'
-    private List<String> languages;
+// Doctor.java (inherits from Staff)
+class Doctor extends Staff {
+    private String specialty;
+    private String licenseNumber;
 
-    public Staff(String title, String givenName, String middleName, String familyName,
-                 LocalDate birthDate, Gender gender, String homeAddress, String phone,
-                 LocalDate joinedDate, List<String> education, List<String> certifications, List<String> languages) {
-        super(title, givenName, middleName, familyName, birthDate, gender, homeAddress, phone);
-        this.joinedDate = joinedDate;
-        this.education = education != null ? new ArrayList<>(education) : new ArrayList<>();
-        this.certifications = certifications != null ? new ArrayList<>(certifications) : new ArrayList<>();
-        this.languages = languages != null ? new ArrayList<>(languages) : new ArrayList<>();
-        System.out.println("Staff member " + getFullName() + " joined.");
+    public Doctor(String id, String name, String contactNumber, String department, String workShift, String specialty, String licenseNumber) {
+        super(id, name, "Doctor", contactNumber, department, workShift);
+        this.specialty = specialty;
+        this.licenseNumber = licenseNumber;
     }
 
     // Getters
-    public LocalDate getJoinedDate() { return joinedDate; }
-    public List<String> getEducation() { return new ArrayList<>(education); }
-    public List<String> getCertifications() { return new ArrayList<>(certifications); }
-    public List<String> getLanguages() { return new ArrayList<>(languages); }
+    public String getSpecialty() { return specialty; }
+    public String getLicenseNumber() { return licenseNumber; }
 
-    public void displayStaffInfo() {
-        System.out.println("\n--- Staff Info: " + getFullName() + " ---");
-        System.out.println("Role: " + this.getClass().getSimpleName());
-        System.out.println("Joined: " + joinedDate);
-        System.out.println("Education: " + (education.isEmpty() ? "None" : String.join(", ", education)));
-        System.out.println("Certifications: " + (certifications.isEmpty() ? "None" : String.join(", ", certifications)));
-        System.out.println("Languages: " + (languages.isEmpty() ? "None" : String.join(", ", languages)));
-        System.out.println("------------------------------");
+    // Operations
+    public void performSurgery(Patient patient, String surgeryDetails) {
+        System.out.println("Dr. " + this.name + " is performing surgery on " + patient.getName() + ": " + surgeryDetails);
+        // This would involve complex logic, updating patient status, etc.
+    }
+
+    public void diagnosePatient(Patient patient, String diagnosis) {
+        System.out.println("Dr. " + this.name + " diagnosed " + patient.getName() + " with: " + diagnosis);
+        // This would typically add an entry to the patient's medical record.
+        if (patient.getMedicalRecord() != null) {
+            patient.getMedicalRecord().addRecord("Diagnosis by Dr. " + this.name + ": " + diagnosis);
+        }
     }
 }
 
-// =============================================================================
-// Staff Sub-hierarchies
-// =============================================================================
+// Nurse.java (inherits from Staff)
+class Nurse extends Staff {
+    private String shift; // e.g., "Day", "Night"
 
-// --- Operations Staff Hierarchy ---
-class OperationsStaff extends Staff {
-    public OperationsStaff(String title, String givenName, String middleName, String familyName,
-                           LocalDate birthDate, Gender gender, String homeAddress, String phone,
-                           LocalDate joinedDate, List<String> education, List<String> certifications, List<String> languages) {
-        super(title, givenName, middleName, familyName, birthDate, gender, homeAddress, phone,
-              joinedDate, education, certifications, languages);
-        System.out.println(getFullName() + " is Operations Staff.");
+    public Nurse(String id, String name, String contactNumber, String department, String workShift, String shift) {
+        super(id, name, "Nurse", contactNumber, department, workShift);
+        this.shift = shift;
     }
 
-    // Example interaction: Operations staff can manage patient's status
-    public void managePatientStatus(Patient patient, String newStatus) {
-        System.out.println(this.getFullName() + " is managing " + patient.getFullName() + "'s status to: " + newStatus);
-        // In a real system, patient.setStatus(newStatus) would be called if Patient had a status.
-    }
-}
+    // Getter
+    public String getShift() { return shift; }
 
-class Doctor extends OperationsStaff {
-    private List<String> specialties;
-    private List<String> locations;
-
-    public Doctor(String title, String givenName, String middleName, String familyName,
-                  LocalDate birthDate, Gender gender, String homeAddress, String phone,
-                  LocalDate joinedDate, List<String> education, List<String> certifications, List<String> languages,
-                  List<String> specialties, List<String> locations) {
-        super(title, givenName, middleName, familyName, birthDate, gender, homeAddress, phone,
-              joinedDate, education, certifications, languages);
-        this.specialties = specialties != null ? new ArrayList<>(specialties) : new ArrayList<>();
-        this.locations = locations != null ? new ArrayList<>(locations) : new ArrayList<>();
-        System.out.println("Doctor " + getFullName() + " created.");
-    }
-
-    // Getters
-    public List<String> getSpecialties() { return new ArrayList<>(specialties); }
-    public List<String> getLocations() { return new ArrayList<>(locations); }
-
-    // Example: Doctor can prescribe medication
-    public void prescribeMedication(Patient patient, String medication) {
-        System.out.println("Dr. " + getFullName() + " prescribed " + medication + " for " + patient.getFullName());
-        // patient.addPrescription(medication); // If patient had addPrescription method
-    }
-}
-
-class Nurse extends OperationsStaff {
-    public Nurse(String title, String givenName, String middleName, String familyName,
-                 LocalDate birthDate, Gender gender, String homeAddress, String phone,
-                 LocalDate joinedDate, List<String> education, List<String> certifications, List<String> languages) {
-        super(title, givenName, middleName, familyName, birthDate, gender, homeAddress, phone,
-              joinedDate, education, certifications, languages);
-        System.out.println("Nurse " + getFullName() + " created.");
-    }
-
-    // Example: Nurse can administer medication
+    // Operations
     public void administerMedication(Patient patient, String medication) {
-        System.out.println("Nurse " + getFullName() + " administered " + medication + " to " + patient.getFullName());
+        System.out.println("Nurse " + this.name + " administered " + medication + " to " + patient.getName());
+        if (patient.getMedicalRecord() != null) {
+            patient.getMedicalRecord().addRecord("Medication administered by Nurse " + this.name + ": " + medication);
+        }
+    }
+
+    public void assistDoctor(Doctor doctor, String task) {
+        System.out.println("Nurse " + this.name + " is assisting Dr. " + doctor.getName() + " with: " + task);
     }
 }
 
-// --- Administrative Staff Hierarchy ---
-class AdministrativeStaff extends Staff {
-    public AdministrativeStaff(String title, String givenName, String middleName, String familyName,
-                               LocalDate birthDate, Gender gender, String homeAddress, String phone,
-                               LocalDate joinedDate, List<String> education, List<String> certifications, List<String> languages) {
-        super(title, givenName, middleName, familyName, birthDate, gender, homeAddress, phone,
-              joinedDate, education, certifications, languages);
-        System.out.println(getFullName() + " is Administrative Staff.");
-    }
-    // Example: Administrative staff can handle billing
-    public void handleBilling(Patient patient) {
-        System.out.println(this.getFullName() + " is handling billing for " + patient.getFullName());
-    }
-}
+// Patient.java
+class Patient {
+    private String id;
+    private String name;
+    private String dob; // Date of Birth
+    private String gender;
+    private String contactNumber;
+    private String address;
+    private String medicalHistory;
+    private String allergies;
+    private MedicalRecord medicalRecord; // 1-to-1 relationship with MedicalRecord
+    private List<Appointment> appointments; // 1-to-many relationship with Appointment
 
-class FrontDeskStaff extends AdministrativeStaff {
-    public FrontDeskStaff(String title, String givenName, String middleName, String familyName,
-                          LocalDate birthDate, Gender gender, String homeAddress, String phone,
-                          LocalDate joinedDate, List<String> education, List<String> certifications, List<String> languages) {
-        super(title, givenName, middleName, familyName, birthDate, gender, homeAddress, phone,
-              joinedDate, education, certifications, languages);
-        System.out.println("Front Desk Staff " + getFullName() + " created.");
-    }
-
-    // Example: Front Desk Staff can check-in patients
-    public void checkInPatient(Patient patient) {
-        System.out.println(getFullName() + " checked in patient " + patient.getFullName());
-    }
-}
-
-class Receptionist extends FrontDeskStaff {
-    public Receptionist(String title, String givenName, String middleName, String familyName,
-                        LocalDate birthDate, Gender gender, String homeAddress, String phone,
-                        LocalDate joinedDate, List<String> education, List<String> certifications, List<String> languages) {
-        super(title, givenName, middleName, familyName, birthDate, gender, homeAddress, phone,
-              joinedDate, education, certifications, languages);
-        System.out.println("Receptionist " + getFullName() + " created.");
+    public Patient(String id, String name, String dob, String gender, String contactNumber, String address, String medicalHistory, String allergies) {
+        this.id = id;
+        this.name = name;
+        this.dob = dob;
+        this.gender = gender;
+        this.contactNumber = contactNumber;
+        this.address = address;
+        this.medicalHistory = medicalHistory;
+        this.allergies = allergies;
+        this.appointments = new ArrayList<>();
     }
 
-    // Example: Receptionist can schedule appointments
-    public void scheduleAppointment(Patient patient, Doctor doctor, LocalDate date) {
-        System.out.println(getFullName() + " scheduled appointment for " + patient.getFullName() + " with Dr. " + doctor.getFullName() + " on " + date);
-    }
-}
+    // Getters
+    public String getId() { return id; }
+    public String getName() { return name; }
+    public String getDob() { return dob; }
+    public String getGender() { return gender; }
+    public String getContactNumber() { return contactNumber; }
+    public String getAddress() { return address; }
+    public String getMedicalHistory() { return medicalHistory; }
+    public String getAllergies() { return allergies; }
+    public MedicalRecord getMedicalRecord() { return medicalRecord; }
+    public List<Appointment> getAppointments() { return appointments; }
 
-// --- Technical Staff Hierarchy ---
-class TechnicalStaff extends Staff {
-    public TechnicalStaff(String title, String givenName, String middleName, String familyName,
-                          LocalDate birthDate, Gender gender, String homeAddress, String phone,
-                          LocalDate joinedDate, List<String> education, List<String> certifications, List<String> languages) {
-        super(title, givenName, middleName, familyName, birthDate, gender, homeAddress, phone,
-              joinedDate, education, certifications, languages);
-        System.out.println(getFullName() + " is Technical Staff.");
-    }
+    // Setter for MedicalRecord (to link it after creation)
+    public void setMedicalRecord(MedicalRecord medicalRecord) { this.medicalRecord = medicalRecord; }
 
-    // Example: Technical staff can perform equipment maintenance
-    public void performMaintenance(String equipmentName) {
-        System.out.println(this.getFullName() + " performed maintenance on " + equipmentName);
-    }
-}
-
-class Technician extends TechnicalStaff {
-    public Technician(String title, String givenName, String middleName, String familyName,
-                      LocalDate birthDate, Gender gender, String homeAddress, String phone,
-                      LocalDate joinedDate, List<String> education, List<String> certifications, List<String> languages) {
-        super(title, givenName, middleName, familyName, birthDate, gender, homeAddress, phone,
-              joinedDate, education, certifications, languages);
-        System.out.println("Technician " + getFullName() + " created.");
+    // Operations
+    public Appointment bookAppointment(Date date, String time, Staff staff) {
+        String appointmentId = "APP-" + UUID.randomUUID().toString().substring(0, 8);
+        Appointment newAppointment = new Appointment(appointmentId, date, time, this, staff);
+        this.appointments.add(newAppointment);
+        System.out.println(this.name + " booked an appointment with " + staff.getName() + " on " + date + " at " + time);
+        return newAppointment;
     }
 
-    // Example: Technician can fix medical devices
-    public void fixDevice(String deviceName) {
-        System.out.println(getFullName() + " fixed medical device: " + deviceName);
+    public void viewTreatmentHistory() {
+        System.out.println("--- Treatment History for " + this.name + " ---");
+        if (medicalRecord != null) {
+            medicalRecord.viewRecord();
+        } else {
+            System.out.println("No medical record available.");
+        }
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Patient patient = (Patient) o;
+        return Objects.equals(id, patient.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 }
 
-class Technologist extends TechnicalStaff {
-    public Technologist(String title, String givenName, String middleName, String familyName,
-                        LocalDate birthDate, Gender gender, String homeAddress, String phone,
-                        LocalDate joinedDate, List<String> education, List<String> certifications, List<String> languages) {
-        super(title, givenName, middleName, familyName, birthDate, gender, homeAddress, phone,
-              joinedDate, education, certifications, languages);
-        System.out.println("Technologist " + getFullName() + " created.");
+// MedicalRecord.java
+class MedicalRecord {
+    private String id;
+    private Patient patient; // 1-to-1 relationship with Patient (has)
+    private List<Treatment> treatments; // 0-to-many relationship with Treatment (includes)
+    private List<String> recordEntries; // Simple list to store textual record entries
+
+    public MedicalRecord(String id, Patient patient) {
+        this.id = id;
+        this.patient = patient;
+        this.treatments = new ArrayList<>();
+        this.recordEntries = new ArrayList<>();
+        this.recordEntries.add("Medical Record created for " + patient.getName() + " on " + new Date());
     }
 
-    // Example: Technologist can analyze lab results
-    public void analyzeLabResults(String testName) {
-        System.out.println(getFullName() + " analyzed lab results for: " + testName);
+    // Getters
+    public String getId() { return id; }
+    public Patient getPatient() { return patient; }
+    public List<Treatment> getTreatments() { return treatments; }
+    public List<String> getRecordEntries() { return recordEntries; }
+
+    // Operations
+    public void addRecord(String entry) {
+        this.recordEntries.add(new Date() + ": " + entry);
+        System.out.println("Added record entry for " + patient.getName() + ": " + entry);
+    }
+
+    public void viewRecord() {
+        System.out.println("Medical Record ID: " + id + " for Patient: " + patient.getName());
+        System.out.println("--- Entries ---");
+        if (recordEntries.isEmpty()) {
+            System.out.println("No entries yet.");
+        } else {
+            for (String entry : recordEntries) {
+                System.out.println(entry);
+            }
+        }
+        System.out.println("--- Treatments ---");
+        if (treatments.isEmpty()) {
+            System.out.println("No treatments recorded yet.");
+        } else {
+            for (Treatment treatment : treatments) {
+                System.out.println("  - " + treatment.getDescription() + " (Cost: $" + String.format("%.2f", treatment.getCost()) + ", Date: " + treatment.getTreatmentDate() + ")");
+            }
+        }
     }
 }
 
-class SurgicalTechnologist extends Technologist {
-    public SurgicalTechnologist(String title, String givenName, String middleName, String familyName,
-                                 LocalDate birthDate, Gender gender, String homeAddress, String phone,
-                                 LocalDate joinedDate, List<String> education, List<String> certifications, List<String> languages) {
-        super(title, givenName, middleName, familyName, birthDate, gender, homeAddress, phone,
-              joinedDate, education, certifications, languages);
-        System.out.println("Surgical Technologist " + getFullName() + " created.");
+// Treatment.java
+class Treatment {
+    private String id;
+    private String description;
+    private double cost;
+    private Date treatmentDate;
+    private Doctor providedBy; // 1-to-1 relationship with Doctor (provided by)
+
+    public Treatment(String id, String description, double cost, Date treatmentDate, Doctor providedBy) {
+        this.id = id;
+        this.description = description;
+        this.cost = cost;
+        this.treatmentDate = treatmentDate;
+        this.providedBy = providedBy;
     }
 
-    // Example: Surgical Technologist can assist in surgery
-    public void assistInSurgery(String procedureName) {
-        System.out.println(getFullName() + " is assisting in surgery: " + procedureName);
+    // Getters
+    public String getId() { return id; }
+    public String getDescription() { return description; }
+    public double getCost() { return cost; }
+    public Date getTreatmentDate() { return treatmentDate; }
+    public Doctor getProvidedBy() { return providedBy; }
+
+    // Operations
+    public void addTreatment(MedicalRecord medicalRecord) {
+        medicalRecord.getTreatments().add(this);
+        medicalRecord.addRecord("Treatment added: " + description + " by Dr. " + providedBy.getName());
+        System.out.println("Treatment " + description + " added to medical record.");
+    }
+
+    public void viewTreatmentDetails() {
+        System.out.println("--- Treatment Details ---");
+        System.out.println("ID: " + id);
+        System.out.println("Description: " + description);
+        System.out.println("Cost: $" + String.format("%.2f", cost));
+        System.out.println("Date: " + treatmentDate);
+        System.out.println("Provided by: Dr. " + providedBy.getName() + " (" + providedBy.getSpecialty() + ")");
     }
 }
 
+// Appointment.java
+class Appointment {
+    private String id;
+    private Date date;
+    private String time;
+    private Patient patient; // 1-to-1 relationship with Patient (participates)
+    private Staff staff;     // 1-to-1 relationship with Staff (conducted by)
 
-// =============================================================================
-// Main Demonstration Class
-// =============================================================================
-public class HospitalManagementDemo { // This is the public class, so the file must be named HospitalManagementDemo.java
+    public Appointment(String id, Date date, String time, Patient patient, Staff staff) {
+        this.id = id;
+        this.date = date;
+        this.time = time;
+        this.patient = patient;
+        this.staff = staff;
+    }
+
+    // Getters
+    public String getId() { return id; }
+    public Date getDate() { return date; }
+    public String getTime() { return time; }
+    public Patient getPatient() { return patient; }
+    public Staff getStaff() { return staff; }
+
+    // Operations
+    public void createAppointment() {
+        System.out.println("Appointment " + id + " created for " + patient.getName() + " with " + staff.getName() + " on " + date + " at " + time);
+        // This would involve adding to staff's schedule and patient's appointment list.
+        // (Already done in Patient.bookAppointment)
+    }
+
+    public void cancelAppointment() {
+        System.out.println("Appointment " + id + " for " + patient.getName() + " cancelled.");
+        // In a real system, this would remove the appointment from schedules and lists.
+    }
+}
+
+// Main class to demonstrate the Hospital Management System
+public class HospitalManagementSystem { // This is the public class, so the file must be named HospitalManagementSystem.java
     public static void main(String[] args) {
-        System.out.println("--- Starting Hospital Management System Demonstration ---");
+        // --- 1. Create Staff ---
+        Doctor drSmith = new Doctor("D001", "Dr. Smith", "987-654-3210", "Cardiology", "Day", "Cardiologist", "LIC-12345");
+        Nurse nurseAlice = new Nurse("N001", "Nurse Alice", "111-222-3333", "Emergency", "Night", "Night");
+        Doctor drJones = new Doctor("D002", "Dr. Jones", "555-123-4567", "General Medicine", "Day", "General Practitioner", "LIC-67890");
 
-        // 1. Create Hospital and Department
-        Hospital generalHospital = new Hospital("General City Hospital", "456 Oak St, Metropolis", "555-9876");
-        Department emergencyDept = new Department("Emergency Department");
-        generalHospital.setDepartment(emergencyDept);
+        // --- 2. Create Patients ---
+        Patient patientA = new Patient("P001", "John Doe", "1985-03-15", "Male", "999-888-7777", "123 Elm St", "None", "Penicillin");
+        Patient patientB = new Patient("P002", "Jane Doe", "1990-07-22", "Female", "777-666-5555", "456 Oak Ave", "Asthma", "None");
 
-        // 2. Create Staff Members
-        Doctor drSmith = new Doctor("Dr.", "Alice", "B.", "Smith", LocalDate.of(1975, 5, 15), Gender.FEMALE,
-                "789 Elm St", "555-1235", LocalDate.of(2000, 1, 1),
-                Arrays.asList("MD", "Residency"), Arrays.asList("Board Certified"), Arrays.asList("English"),
-                Arrays.asList("Cardiology", "Internal Medicine"), Arrays.asList("Main Clinic", "ER"));
-        generalHospital.addEmployee(drSmith);
+        // --- 3. Create Medical Records and link to Patients ---
+        MedicalRecord recordA = new MedicalRecord("MR001", patientA);
+        patientA.setMedicalRecord(recordA);
 
-        Nurse nurseJones = new Nurse("Ms.", "Betty", "", "Jones", LocalDate.of(1988, 11, 20), Gender.FEMALE,
-                "101 Pine St", "555-2345", LocalDate.of(2010, 3, 10),
-                Arrays.asList("BSN"), Arrays.asList("RN License"), Arrays.asList("English", "Spanish"));
-        generalHospital.addEmployee(nurseJones);
+        MedicalRecord recordB = new MedicalRecord("MR002", patientB);
+        patientB.setMedicalRecord(recordB);
 
-        Receptionist annWhite = new Receptionist("Ms.", "Ann", "", "White", LocalDate.of(1995, 7, 7), Gender.FEMALE,
-                "202 Birch Ave", "555-3456", LocalDate.of(2018, 9, 1),
-                Arrays.asList("High School Diploma"), new ArrayList<>(), Arrays.asList("English"));
-        generalHospital.addEmployee(annWhite);
+        System.out.println("\n--- Patient Operations ---");
+        // John Doe books an appointment
+        Date today = new Date();
+        Appointment appt1 = patientA.bookAppointment(today, "10:00 AM", drSmith);
+        drSmith.scheduleAppointment(appt1); // Doctor also acknowledges the appointment
 
-        SurgicalTechnologist techMike = new SurgicalTechnologist("Mr.", "Mike", "", "Green", LocalDate.of(1990, 2, 28), Gender.MALE,
-                "303 Cedar Ln", "555-4567", LocalDate.of(2015, 6, 1),
-                Arrays.asList("Associate Degree"), Arrays.asList("CST"), Arrays.asList("English"));
-        generalHospital.addEmployee(techMike);
+        // Jane Doe books an appointment with a nurse
+        Date tomorrow = new Date(today.getTime() + (1000 * 60 * 60 * 24)); // Add one day
+        Appointment appt2 = patientB.bookAppointment(tomorrow, "02:00 PM", nurseAlice);
+        nurseAlice.scheduleAppointment(appt2);
 
-        // 3. Create a Patient
-        Patient patBrown = new Patient("Mr.", "Charles", "", "Brown", LocalDate.of(1960, 1, 1), Gender.MALE,
-                "404 Maple Dr", "555-5678", "P001", LocalDate.of(2025, 5, 20),
-                "Hypertension", Arrays.asList("Lisinopril"), Arrays.asList("Penicillin"), Arrays.asList("Wheelchair access needed"));
-        generalHospital.addEmployee(patBrown); // Adding patient to hospital's list of 'persons' (broadly)
+        System.out.println("\n--- Doctor Operations ---");
+        drSmith.diagnosePatient(patientA, "Common cold, mild");
+        drSmith.updatePatientRecord(patientA, recordA, "Prescribed rest and fluids.");
 
-        // Display Info
-        generalHospital.displayHospitalInfo();
-        drSmith.displayStaffInfo();
-        patBrown.displayPatientInfo();
+        // Dr. Jones performs a surgery (example)
+        drJones.performSurgery(patientB, "Appendectomy");
+        drJones.diagnosePatient(patientB, "Post-surgery recovery");
+        drJones.updatePatientRecord(patientB, recordB, "Post-op instructions given.");
 
-        // 4. Simulate Interactions
-        System.out.println("\n--- Simulating Interactions ---");
+        System.out.println("\n--- Nurse Operations ---");
+        nurseAlice.administerMedication(patientA, "Cough Syrup");
+        nurseAlice.assistDoctor(drSmith, "Preparing examination room.");
 
-        drSmith.prescribeMedication(patBrown, "New Blood Pressure Med");
-        nurseJones.administerMedication(patBrown, "Pain Reliever");
-        annWhite.checkInPatient(patBrown);
-        annWhite.scheduleAppointment(patBrown, drSmith, LocalDate.of(2025, 6, 15));
-        techMike.assistInSurgery("Appendectomy");
+        System.out.println("\n--- Treatment and Medical Record ---");
+        // Dr. Smith adds a treatment for John Doe
+        Treatment treatment1 = new Treatment("T001", "Antibiotics Course", 50.00, new Date(), drSmith);
+        treatment1.addTreatment(recordA);
+        treatment1.viewTreatmentDetails();
 
-        System.out.println("\n--- Hospital Management System Demonstration Complete ---");
+        // View John Doe's full treatment history
+        patientA.viewTreatmentHistory();
+
+        // View Jane Doe's medical record
+        patientB.viewTreatmentHistory();
+
+        System.out.println("\n--- Appointment Management ---");
+        appt1.createAppointment(); // This just prints a message, already "created" when booked
+        appt2.cancelAppointment(); // Jane Doe cancels her appointment with Nurse Alice
+        patientB.getAppointments().remove(appt2); // Remove from patient's list as well
     }
 }
