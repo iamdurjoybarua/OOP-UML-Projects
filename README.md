@@ -79,14 +79,14 @@ To compile and run the Java demonstration applications:
     *(This command will compile all `.java` files in the `src` directory.)*
 4.  **Run the demonstrations:**
     ```bash
-    java AirlineReservationSystemDemo
-    java ATMSystemDemo
-    java BankingSystemDemo
-    java HospitalManagementSystem  # Corrected executable filename
-    java HotelManagementSystemDemo
-    java LibrarySystemDemo
-    java OnlineShoppingSystem     # Corrected executable filename
-    java StudentRegistrationSystem # Corrected executable filename
+    java AirlineReservationSystem
+    java ATMSystem
+    java BankingSystem
+    java HospitalManagementSystem
+    java HotelManagementSystem
+    java LibraryManagementSystem
+    java OnlineShoppingSystem
+    java StudentRegistrationSystem
     ```
 
 
