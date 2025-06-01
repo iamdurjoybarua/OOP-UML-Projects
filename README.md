@@ -8,7 +8,6 @@ A collection of object-oriented programming (OOP) system design examples, demons
 -   [Features](#features)
 -   [Project Structure](#project-structure)
 -   [Systems Covered](#systems-covered)
--   [How to View UML Diagrams](#how-to-view-uml-diagrams)
 -   [How to Run Java Code](#how-to-run-java-code)
 -   [Author](#author)
 -   [License](#license)
@@ -98,4 +97,3 @@ Durjoy Barua (https://github.com/iamdurjoybarua)
 ## License
 
 This project is open-source and available under the MIT License (https://opensource.org/licenses/MIT).
-
