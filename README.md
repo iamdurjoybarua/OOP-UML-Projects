@@ -26,7 +26,7 @@ This repository serves as a practical showcase for fundamental concepts in Objec
 
 ## Project Structure
 
-The repository is organized to clearly separate UML diagrams (as PlantUML source files) from Java source code:
+The repository is organized to clearly separate UML diagrams (as PlantUML source files and potentially rendered images) from Java source code:
 
 ## Systems Covered
 
@@ -34,55 +34,35 @@ This repository includes design and implementation for the following systems, ea
 
 1.  **Class Diagram for ATM**
     * *Description:* This class diagram for the ATM maps out the structure and attributes of how an ATM works. It also shows the relationship between multiple classes.
-    * UML: `uml/atm_class_diagram.puml`
-    * Java: `src/ATMSystemDemo.java`
+    
 
 2.  **Class Diagram for Hotel Management System**
     * *Description:* This hotel management class diagram carefully links all classes joining them together through arrows to show the relationship between them.
-    * UML: `uml/hotel_management_class_diagram.puml`
-    * Java: `src/HotelManagementSystemDemo.java`
+   
 
 3.  **Class Diagram for Library Management System**
     * *Description:* The library management system class diagram has multiple classes like the user, librarian, book, account, etc. It then describes the attributes and operations of each of the classes linking them together for the library management system.
-    * UML: `uml/library_management_class_diagram.puml`
-    * Java: `src/LibrarySystemDemo.java`
+    
 
 4.  **Class Diagram for Online Shopping**
     * *Description:* This online shopping class diagram shows the domain model for online shopping. This diagram will help software engineers and business analysts easily understand the diagram. The diagram links classes like user and account to show how an order is placed and then shipped.
-    * UML: `uml/online_shopping_class_diagram.puml`
-    * Java: `src/OnlineShoppingDemo.java`
+ 
 
 5.  **Class Diagram for Hospital Management System**
     * *Description:* This domain model shows several class diagrams like a patient, staff, treatment, and the relationships between them.
-    * UML: `uml/hospital_management_class_diagram.puml`
-    * Java: `src/HospitalManagementDemo.java`
+  
 
 6.  **Class Diagram for Banking System**
     * *Description:* This class diagram for a banking system shows banks, ATMs, customers, etc as different classes. The attributes are listed in the second compartment for each of these and then they are linked together showing the relationship with each.
-    * UML: `uml/banking_system_class_diagram.puml`
-    * Java: `src/BankingSystemDemo.java`
+    
 
 7.  **Class Diagram for Student Registration System**
     * *Description:* This class diagram shows multiple classes like student, account, course registration manager, course, etc. Registration, course, and account are subclasses of the registration manager and are linked to it using a solid arrow.
-    * UML: `uml/student_registration_class_diagram.puml`
-    * Java: `src/StudentRegistrationDemo.java`
+    
 
 8.  **Class Diagram for Airline Reservation System**
     * *Description:* This Airline Reservation System Class diagram template showcases the classes, their structure, attributes, operations, and relationships. The main classes in the chart shown below are Reservation, passenger, ticket booking, employee, etc.
-    * UML: `uml/airline_reservation_class_diagram.puml` (Also includes `uml/airline_reservation_use_case_diagram.puml` for the Use Case Diagram)
-    * Java: `src/AirlineReservationSystemDemo.java`
 
-## How to View UML Diagrams
-
-The UML diagrams are provided as PlantUML source files (`.puml`). You can view and render them using various tools:
-
-1.  **Online PlantUML Server:**
-    * Copy the content of any `.puml` file.
-    * Paste it into the [PlantUML Online Server](http://www.plantuml.com/plantuml/index) and click "Submit" to see the rendered diagram.
-2.  **IDE Extensions:**
-    * Many IDEs (like VS Code, IntelliJ IDEA, Eclipse) have PlantUML plugins that allow you to preview the diagrams directly within your editor.
-3.  **Local PlantUML Installation:**
-    * You can install PlantUML locally and use command-line tools to generate images (e.g., PNG, SVG) from the `.puml` files. Refer to the [PlantUML Documentation](https://plantuml.com/starting) for installation instructions.
 
 ## How to Run Java Code
 
@@ -101,13 +81,13 @@ To compile and run the Java demonstration applications:
 4.  **Run the demonstrations:**
     ```bash
     java AirlineReservationSystemDemo
-    java BankingSystemDemo
-    java HotelManagementSystemDemo
-    java HospitalManagementDemo
-    java LibrarySystemDemo
-    java OnlineShoppingDemo
-    java StudentRegistrationDemo
     java ATMSystemDemo
+    java BankingSystemDemo
+    java HospitalManagementSystem  # Corrected executable filename
+    java HotelManagementSystemDemo
+    java LibrarySystemDemo
+    java OnlineShoppingSystem     # Corrected executable filename
+    java StudentRegistrationSystem # Corrected executable filename
     ```
 
 
@@ -118,5 +98,4 @@ Durjoy Barua (https://github.com/iamdurjoybarua)
 ## License
 
 This project is open-source and available under the MIT License (https://opensource.org/licenses/MIT).
-
 
